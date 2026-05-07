@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Windows automation app — build no-code workflows that run automatically",
   "main": "out/main/index.js",
-  "author": "FlowMate",
+  "author": {
+    "name": "blackfyre",
+    "email": "adarshchauhan13@gmail.com"
+  },
   "private": true,
   "scripts": {
     "dev": "electron-vite dev",
@@ -42,6 +45,7 @@
   "build": {
     "appId": "com.flowmate.app",
     "productName": "FlowMate",
+    "copyright": "© 2025 blackfyre. All rights reserved.",
     "directories": {
       "output": "dist"
     },
@@ -49,11 +53,19 @@
       "target": [
         "nsis"
       ],
-      "icon": "resources/icon.ico"
+      "icon": "resources/icon.ico",
+      "publisherName": "blackfyre",
+      "legalTrademarks": "FlowMate by blackfyre"
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "resources/icon.ico",
+      "uninstallerIcon": "resources/icon.ico",
+      "installerHeaderIcon": "resources/icon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "FlowMate"
     },
     "extraResources": [
       {
