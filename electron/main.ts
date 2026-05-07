@@ -18,9 +18,9 @@ import { setupIpcHandlers, loadSettings } from './ipc-handlers'
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
-const ENGINE_PORT = 7823
-const ENGINE_HOST = `http://localhost:${ENGINE_PORT}`
 const IS_DEV = !app.isPackaged
+const ENGINE_PORT = IS_DEV ? 7824 : 7823
+const ENGINE_HOST = `http://localhost:${ENGINE_PORT}`
 const PRELOAD_PATH = join(__dirname, '../preload/index.js')
 
 // ─── State ───────────────────────────────────────────────────────────────────
@@ -236,8 +236,10 @@ async function createWindow(): Promise<void> {
 // ─── System Tray ─────────────────────────────────────────────────────────────
 
 function createTray(): void {
-  // Use a simple 16x16 icon — replace with real icon in production
-  const icon = nativeImage.createEmpty()
+  const iconPath = IS_DEV
+    ? join(process.cwd(), 'resources', 'icon.png')
+    : join(process.resourcesPath, 'icon.png')
+  const icon = nativeImage.createFromPath(iconPath).resize({ width: 16, height: 16 })
   tray = new Tray(icon)
 
   const contextMenu = Menu.buildFromTemplate([
@@ -300,13 +302,16 @@ ipcMain.handle('cursor:pick', async () => {
   return point
 })
 
-ipcMain.handle('app:getVersion', () => app.getVersion())
-ipcMain.handle('app:getDataPath', () => app.getPath('userData'))
-
 // ─── App Lifecycle ────────────────────────────────────────────────────────────
 
-// Prevent multiple instances
+// Give dev mode its own userData directory so its single-instance lock is
+// completely separate from a running installed (production) build.
+if (IS_DEV) {
+  app.setPath('userData', join(app.getPath('userData'), '..', 'FlowMate-dev'))
+}
+
 const gotLock = app.requestSingleInstanceLock()
+
 if (!gotLock) {
   app.quit()
 } else {
@@ -317,6 +322,10 @@ if (!gotLock) {
 }
 
 app.whenReady().then(async () => {
+  // Electron fires whenReady even when app.quit() was called (e.g. !gotLock).
+  // Return early so we don't start the engine or UI in that case.
+  if (!gotLock) return
+
   app.setAboutPanelOptions({
     applicationName: 'FlowMate',
     applicationVersion: `Version ${app.getVersion()}`,
