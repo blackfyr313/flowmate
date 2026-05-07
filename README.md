@@ -1,17 +1,27 @@
 <div align="center">
 
+<img src="resources/icon.png" alt="FlowMate" width="120" />
+
 # FlowMate
 
 **No-code Windows automation — built by Blackfyre**
 
 *Build, schedule, and run desktop automations without writing a single line of code.*
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue?style=flat-square)](https://github.com/blackfyr313/flowmate/releases)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue?style=flat-square)](https://github.com/blackfyr313/flowmate/releases/tag/v1.0.0)
 [![Platform](https://img.shields.io/badge/platform-Windows-0078d4?style=flat-square&logo=windows)](https://github.com/blackfyr313/flowmate/releases)
 [![License](https://img.shields.io/badge/license-Proprietary-red?style=flat-square)](./resources/license.txt)
 [![Made by](https://img.shields.io/badge/made%20by-Blackfyre-7c5ff7?style=flat-square)](https://github.com/blackfyr313)
 
 </div>
+
+---
+
+## Download
+
+**[⬇ FlowMate Setup 1.0.0.exe](https://github.com/blackfyr313/flowmate/releases/download/v1.0.0/FlowMateSetup.exe)**
+
+> **Note:** Windows may show a SmartScreen warning on first launch ("Unknown publisher"). Click **More info → Run anyway**. This is expected for apps without a paid code-signing certificate.
 
 ---
 
@@ -23,14 +33,6 @@ No Python knowledge required. No scripting. Just drag, drop, and run.
 
 ---
 
-## Download
-
-Head to [Releases](https://github.com/blackfyr313/flowmate/releases) and download **FlowMate Setup 1.0.0.exe**.
-
-> **Note:** Windows may show a SmartScreen warning on first launch ("Unknown publisher"). Click **More info → Run anyway**. This is expected for apps without a paid code-signing certificate.
-
----
-
 ## Features
 
 - **Visual automation builder** — drag-and-drop step ordering
@@ -38,7 +40,7 @@ Head to [Releases](https://github.com/blackfyr313/flowmate/releases) and downloa
 - **Run history** — see every automation run and its step results
 - **Trigger types** — manual, schedule, hotkey, on startup, on app launch
 - **System tray** — runs quietly in the background
-- **Admin elevation** — optional UAC prompt for full system access
+- **Admin elevation** — UAC prompt for full system access on first launch
 - **Settings** — start on login, minimize to tray, import/export automations
 
 ---
@@ -108,7 +110,7 @@ npm run dev
 npm run package
 ```
 
-Output: `dist/FlowMate Setup 1.0.0.exe`
+Output: `dist/FlowMateSetup.exe`
 
 ---
 

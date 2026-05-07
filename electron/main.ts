@@ -65,7 +65,10 @@ function relaunchAsAdmin(): void {
       `sh.ShellExecute "powershell.exe", "${psArg}", "", "runas", 1`,
     ].join('\n')
   } else {
-    // Production: relaunch the packaged exe with admin rights
+    // Production: relaunch the packaged exe with admin rights.
+    // Release the lock BEFORE spawning so the elevated instance can acquire it
+    // immediately — avoids the race where it starts faster than app.quit() clears the lock.
+    app.releaseSingleInstanceLock()
     const exePath = process.execPath
     const extraArgs = process.argv.slice(1).join(' ')
     vbsContent = [
@@ -78,9 +81,6 @@ function relaunchAsAdmin(): void {
   writeFileSync(vbsPath, vbsContent, 'utf8')
 
   try {
-    // Run wscript synchronously: ShellExecute fires the UAC prompt (via explorer.exe,
-    // outside Electron's Job Object) before wscript exits, so the elevated process is
-    // already in flight by the time we call app.quit().
     execFileSync('wscript.exe', [vbsPath], { timeout: 5000 })
   } catch {
     // Ignore — UAC dismissed or wscript error; we still quit.
