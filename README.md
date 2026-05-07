@@ -1,8 +1,45 @@
+<div align="center">
+
 # FlowMate
 
-**No-code Windows automation — built with Electron + React + Python FastAPI**
+**No-code Windows automation — built by Blackfyre**
 
-FlowMate lets you build, schedule, and run desktop automations without writing code. Chain together steps like opening apps, navigating URLs, typing text, and pressing keys — then run them on demand or on a schedule.
+*Build, schedule, and run desktop automations without writing a single line of code.*
+
+[![Version](https://img.shields.io/badge/version-1.0.0-blue?style=flat-square)](https://github.com/blackfyr313/flowmate/releases)
+[![Platform](https://img.shields.io/badge/platform-Windows-0078d4?style=flat-square&logo=windows)](https://github.com/blackfyr313/flowmate/releases)
+[![License](https://img.shields.io/badge/license-Proprietary-red?style=flat-square)](./resources/license.txt)
+[![Made by](https://img.shields.io/badge/made%20by-Blackfyre-7c5ff7?style=flat-square)](https://github.com/blackfyr313)
+
+</div>
+
+---
+
+## What is FlowMate?
+
+FlowMate is a Windows desktop app that lets you automate repetitive tasks visually. Chain together steps — open apps, navigate URLs, type text, press keys, move windows, click elements — then run them manually, on a schedule, or via a hotkey.
+
+No Python knowledge required. No scripting. Just drag, drop, and run.
+
+---
+
+## Download
+
+Head to [Releases](https://github.com/blackfyr313/flowmate/releases) and download **FlowMate Setup 1.0.0.exe**.
+
+> **Note:** Windows may show a SmartScreen warning on first launch ("Unknown publisher"). Click **More info → Run anyway**. This is expected for apps without a paid code-signing certificate.
+
+---
+
+## Features
+
+- **Visual automation builder** — drag-and-drop step ordering
+- **9 Phase 1 steps** — Open App, Open URL, Wait, Type Text, Press Key, Move Window, Click Element, Wait for Window, Show Notification
+- **Run history** — see every automation run and its step results
+- **Trigger types** — manual, schedule, hotkey, on startup, on app launch
+- **System tray** — runs quietly in the background
+- **Admin elevation** — optional UAC prompt for full system access
+- **Settings** — start on login, minimize to tray, import/export automations
 
 ---
 
@@ -30,54 +67,48 @@ FlowMate lets you build, schedule, and run desktop automations without writing c
    └───────────────────────────┘
 ```
 
-The React frontend communicates with the Electron main process via `contextBridge` IPC. The main process proxies all API calls to the Python engine running on `localhost:7823`. This separation keeps the UI snappy and the automation logic isolated and restartable.
-
 ---
 
-## Prerequisites
+## Development Setup
 
-| Tool | Version | Notes |
-|------|---------|-------|
-| Node.js | 20+ | LTS recommended |
-| Python | 3.11+ | 3.12 recommended |
-| Tesseract OCR | 5.x | Optional — needed for Wait › Element mode |
+### Prerequisites
 
-### Install Tesseract (optional)
+| Tool | Version |
+|------|---------|
+| Node.js | 20+ (LTS) |
+| Python | 3.11+ |
 
-Download the installer from [UB-Mannheim/tesseract](https://github.com/UB-Mannheim/tesseract/wiki) and add it to your `PATH`.
-
----
-
-## Quick Start
-
-### 1. Clone and install Node dependencies
+### 1. Clone and install
 
 ```bash
-git clone https://github.com/your-org/flowmate.git
+git clone https://github.com/blackfyr313/flowmate.git
 cd flowmate
 npm install
 ```
 
-### 2. Set up the Python engine
+### 2. Set up Python engine
 
 ```bash
 cd engine
 python -m venv .venv
-.venv\Scripts\activate   # Windows
+.venv\Scripts\activate
 pip install -r requirements.txt
 cd ..
 ```
 
-### 3. Run in development mode
+### 3. Run in development
 
 ```bash
 npm run dev
 ```
 
-This starts:
-- **Vite** dev server for the React renderer (HMR enabled)
-- **Electron** main process
-- **Python FastAPI** engine (spawned automatically by Electron on port 7823)
+### 4. Build installer
+
+```bash
+npm run package
+```
+
+Output: `dist/FlowMate Setup 1.0.0.exe`
 
 ---
 
@@ -86,118 +117,49 @@ This starts:
 ```
 flowmate/
 ├── electron/
-│   ├── main.ts              # Electron main process — window, tray, engine spawn
-│   ├── preload.ts           # contextBridge API surface
-│   └── ipc-handlers.ts      # IPC ↔ HTTP proxy handlers
-│
+│   ├── main.ts              # Main process — window, tray, engine, elevation
+│   ├── preload.ts           # contextBridge API
+│   └── ipc-handlers.ts      # IPC ↔ engine HTTP proxy
 ├── src/                     # React renderer
-│   ├── App.tsx
-│   ├── types/index.ts       # Shared TypeScript types
-│   ├── store/
-│   │   └── automationStore.ts
-│   ├── utils/
-│   │   ├── engineApi.ts     # Typed API client
-│   │   └── nanoid.ts
-│   └── components/
-│       ├── Layout/          # AppLayout, TitleBar, Sidebar
-│       ├── Dashboard/       # Dashboard, AutomationCard
-│       ├── AutomationEditor/# Editor, StepItem, StepConfigPanel, AddStepMenu
-│       ├── RunHistory/      # RunHistory
-│       ├── Settings/        # SettingsScreen
-│       └── common/          # NotificationToast
-│
+│   ├── components/
+│   │   ├── Layout/          # TitleBar, Sidebar, AppLayout
+│   │   ├── Dashboard/       # Dashboard, AutomationCard
+│   │   ├── AutomationEditor/# Editor, steps, config forms
+│   │   ├── RunHistory/
+│   │   └── Settings/
+│   ├── store/automationStore.ts
+│   ├── types/index.ts
+│   └── utils/engineApi.ts
 ├── engine/                  # Python FastAPI backend
-│   ├── main.py              # FastAPI app + routes
-│   ├── models.py            # Pydantic v2 models
-│   ├── database.py          # SQLite CRUD
-│   ├── executor.py          # Step runner with retry + cancellation
-│   ├── requirements.txt
-│   └── steps/
-│       ├── __init__.py      # Step registry
-│       ├── open_app.py
-│       ├── open_url.py
-│       ├── wait_step.py
-│       ├── type_text.py
-│       ├── press_key.py
-│       └── show_notification.py
-│
-├── package.json
-├── electron.vite.config.ts
-├── tailwind.config.js
-└── tsconfig.json
+│   ├── main.py
+│   ├── models.py
+│   ├── executor.py
+│   ├── database.py
+│   └── steps/               # One file per step type
+├── resources/
+│   ├── icon.png
+│   ├── icon.ico
+│   └── license.txt
+└── scripts/
+    └── gen_icon.py          # Regenerate app icon
 ```
 
 ---
 
-## Available Scripts
+## Steps Roadmap
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start full dev environment (Electron + Vite + engine) |
-| `npm run build` | Build for production (all three contexts) |
-| `npm run build:win` | Package Windows NSIS installer |
-| `npm run preview` | Preview the renderer build |
-
----
-
-## Phase 1 Steps
-
-| Step | Description |
-|------|-------------|
-| **Open App** | Launch any `.exe` with arguments; optionally wait for the window |
-| **Open URL** | Open a URL in default, Chrome, Firefox, or Edge |
-| **Wait** | Pause for N seconds, or wait until text appears on screen (OCR) |
-| **Type Text** | Type a string at the current cursor position |
-| **Press Key** | Press a key or combo (e.g. `ctrl+c`, `alt+F4`) with repeat support |
-| **Show Notification** | Display a Windows desktop toast notification |
-
-## Phase 2 Steps (coming soon)
-
-Click Element, Login Form, Move/Resize Window, System Setting, Run Script, Condition (if/else), Loop
-
----
-
-## Engine API
-
-The Python engine exposes a REST API on `http://localhost:7823`:
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/health` | Engine status check |
-| `GET` | `/automations` | List all automations |
-| `POST` | `/automations` | Create a new automation |
-| `GET` | `/automations/{id}` | Get automation by ID |
-| `PUT` | `/automations/{id}` | Update automation |
-| `DELETE` | `/automations/{id}` | Delete automation |
-| `POST` | `/automations/{id}/run` | Start a run |
-| `POST` | `/automations/{id}/stop` | Cancel an active run |
-| `POST` | `/automations/{id}/steps/{stepId}/test` | Test a single step |
-| `GET` | `/runs` | List run history |
-| `GET` | `/runs/{id}` | Get a specific run |
-
----
-
-## Data Storage
-
-Automations and run history are stored in SQLite at:
-
-```
-%APPDATA%\FlowMate\flowmate.db
-```
-
-You can export/import automations as JSON from the **Settings** screen.
-
----
-
-## Contributing
-
-1. Fork the repo
-2. Create a feature branch: `git checkout -b feat/my-feature`
-3. Commit your changes: `git commit -m 'feat: add my feature'`
-4. Push and open a PR
+| Phase | Steps | Status |
+|-------|-------|--------|
+| **1** | Open App, Open URL, Wait, Type Text, Press Key, Move Window, Click Element, Wait for Window, Show Notification | ✅ Live |
+| **2** | Scroll, Drag & Drop, Hold Key, Focus/Minimize/Close Window, Kill Process | 🔧 Backend done, UI coming |
+| **3** | Clipboard, System Volume, Lock Screen, Night Light, Brightness, Power | 📋 Planned |
+| **4** | Condition (if/else), Loop, Variables, Run Automation, File operations | 📋 Planned |
+| **5** | Image recognition, OCR click, HTTP requests, Download, Email, TTS | 📋 Planned |
+| **6** | Secrets vault, Registry, Environment variables, Run Script | 📋 Planned |
 
 ---
 
 ## License
 
-MIT © FlowMate Contributors
+© 2025 FlowMate by Blackfyre. All rights reserved.
+See [license.txt](./resources/license.txt) for full terms.

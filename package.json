@@ -4,9 +4,10 @@
   "description": "Windows automation app — build no-code workflows that run automatically",
   "main": "out/main/index.js",
   "author": {
-    "name": "blackfyre",
+    "name": "Blackfyre",
     "email": "adarshchauhan13@gmail.com"
   },
+  "homepage": "https://github.com/blackfyr313/flowmate",
   "private": true,
   "scripts": {
     "dev": "electron-vite dev",
@@ -43,19 +44,19 @@
     "vite": "^5.2.6"
   },
   "build": {
-    "appId": "com.flowmate.app",
+    "appId": "com.blackfyre.flowmate",
     "productName": "FlowMate",
-    "copyright": "© 2025 blackfyre. All rights reserved.",
+    "copyright": "© 2025 FlowMate by Blackfyre. All rights reserved.",
     "directories": {
       "output": "dist"
     },
     "win": {
-      "target": [
-        "nsis"
-      ],
+      "target": ["nsis"],
       "icon": "resources/icon.ico",
-      "publisherName": "blackfyre",
-      "legalTrademarks": "FlowMate by blackfyre"
+      "publisherName": "FlowMate by Blackfyre",
+      "legalTrademarks": "FlowMate™ by Blackfyre",
+      "executableName": "FlowMate",
+      "fileAssociations": []
     },
     "nsis": {
       "oneClick": false,
@@ -63,9 +64,12 @@
       "installerIcon": "resources/icon.ico",
       "uninstallerIcon": "resources/icon.ico",
       "installerHeaderIcon": "resources/icon.ico",
+      "license": "resources/license.txt",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "FlowMate"
+      "shortcutName": "FlowMate",
+      "menuCategory": "FlowMate by Blackfyre",
+      "deleteAppDataOnUninstall": false
     },
     "extraResources": [
       {

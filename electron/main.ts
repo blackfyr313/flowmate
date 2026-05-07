@@ -253,6 +253,10 @@ function createTray(): void {
       label: engineReady ? '● Engine Running' : '○ Engine Starting...',
       enabled: false,
     },
+    {
+      label: `FlowMate v${app.getVersion()} by Blackfyre`,
+      enabled: false,
+    },
     { type: 'separator' },
     {
       label: 'Quit FlowMate',
@@ -296,6 +300,9 @@ ipcMain.handle('cursor:pick', async () => {
   return point
 })
 
+ipcMain.handle('app:getVersion', () => app.getVersion())
+ipcMain.handle('app:getDataPath', () => app.getPath('userData'))
+
 // ─── App Lifecycle ────────────────────────────────────────────────────────────
 
 // Prevent multiple instances
@@ -310,6 +317,15 @@ if (!gotLock) {
 }
 
 app.whenReady().then(async () => {
+  app.setAboutPanelOptions({
+    applicationName: 'FlowMate',
+    applicationVersion: `Version ${app.getVersion()}`,
+    copyright: '© 2025 FlowMate by Blackfyre\nAll rights reserved.',
+    credits: 'Built by Blackfyre',
+    website: 'https://github.com/blackfyr313/flowmate',
+    iconPath: join(__dirname, '../../resources/icon.png'),
+  })
+
   const elevated = isElevated()
   console.log('[FlowMate] Running as administrator:', elevated)
 
