@@ -1,0 +1,28 @@
+# FlowMate Engine — Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# ── Web framework ─────────────────────────────────────────────────────────────
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+
+# ── Data validation ───────────────────────────────────────────────────────────
+pydantic>=2.9.0
+
+# ── Async SQLite ─────────────────────────────────────────────────────────────
+aiosqlite>=0.20.0
+
+# ── System monitoring ────────────────────────────────────────────────────────
+psutil>=5.9.8
+
+# ── GUI automation (Windows) ─────────────────────────────────────────────────
+pyautogui>=0.9.54
+pywin32>=310; sys_platform == "win32"
+
+# ── Screen OCR (optional — used by Wait step in element mode) ─────────────────
+Pillow>=10.4.0
+pytesseract>=0.3.10
+
+# ── Windows toast notifications ───────────────────────────────────────────────
+# win10toast is tried first; plyer is used as fallback
+win10toast>=0.9; sys_platform == "win32"
+plyer>=2.1.0

@@ -1,0 +1,51 @@
+# Claude Code local settings
+.claude/
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-electron/
+out/
+release/
+
+# Python
+engine/.venv/
+engine/__pycache__/
+engine/**/__pycache__/
+engine/**/*.pyc
+engine/**/*.pyo
+engine/.even/
+*.egg-info/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Electron builder cache
+.electron-builder-cache/
+
+# TypeScript
+*.tsbuildinfo

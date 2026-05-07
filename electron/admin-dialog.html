@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlowMate — Administrator Access</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0d0f14;
+      color: #e8ecf5;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      user-select: none;
+      -webkit-app-region: no-drag;
+    }
+
+    /* Drag region at top */
+    .titlebar {
+      height: 32px;
+      -webkit-app-region: drag;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      flex-shrink: 0;
+    }
+    .titlebar span {
+      font-size: 11px;
+      color: #555f7a;
+      font-weight: 500;
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 28px 20px;
+      text-align: center;
+      gap: 0;
+    }
+
+    /* Shield icon */
+    .shield {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(79,142,247,0.15), rgba(124,95,247,0.1));
+      border: 1px solid rgba(79,142,247,0.25);
+      box-shadow: 0 0 32px rgba(79,142,247,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin-bottom: 16px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-4px); }
+    }
+
+    h2 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #e8ecf5;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+
+    p {
+      font-size: 12px;
+      color: #8b94ad;
+      line-height: 1.6;
+      max-width: 280px;
+      margin-bottom: 20px;
+    }
+
+    p strong {
+      color: #c8d0e0;
+    }
+
+    /* Info box */
+    .info-box {
+      width: 100%;
+      background: rgba(79,142,247,0.07);
+      border: 1px solid rgba(79,142,247,0.15);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      text-align: left;
+    }
+    .info-box span.ico { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+    .info-box p {
+      font-size: 11px;
+      color: #8b94ad;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* Buttons */
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4f8ef7, #6b75f7);
+      color: white;
+      box-shadow: 0 4px 16px rgba(79,142,247,0.35);
+    }
+    .btn-primary:hover {
+      box-shadow: 0 6px 20px rgba(79,142,247,0.5);
+      transform: translateY(-1px);
+    }
+    .btn-primary:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.04);
+      color: #8b94ad;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.07);
+      color: #c8d0e0;
+      border-color: rgba(255,255,255,0.12);
+    }
+    .btn-secondary:active {
+      transform: scale(0.98);
+    }
+
+    /* Subtle top shimmer line */
+    .shimmer-line {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(79,142,247,0.5), transparent);
+    }
+  </style>
+</head>
+<body>
+  <div class="shimmer-line"></div>
+  <div class="titlebar">
+    <span>FlowMate</span>
+  </div>
+
+  <div class="content">
+    <div class="shield">🛡️</div>
+
+    <h2>Administrator Access Required</h2>
+    <p>
+      FlowMate needs admin privileges to <strong>launch apps</strong>,
+      <strong>control windows</strong>, and <strong>send keystrokes</strong>
+      without repeated permission prompts.
+    </p>
+
+    <div class="info-box">
+      <span class="ico">⚡</span>
+      <p>Relaunching opens a new elevated window. Your current automations and settings are saved.</p>
+    </div>
+
+    <div class="buttons">
+      <button class="btn-primary" onclick="choose(0)">
+        🚀&nbsp; Relaunch as Administrator
+      </button>
+      <button class="btn-secondary" onclick="choose(1)">
+        Continue without admin access
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function choose(response) {
+      // Send choice back to main process
+      window.__adminChoice = response
+      // Use a hash-change trick since contextBridge isn't available in plain HTML
+      location.hash = 'choice-' + response
+    }
+  </script>
+</body>
+</html>
