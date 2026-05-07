@@ -259,11 +259,10 @@ def main():
     print("  Saved:", png)
 
     ico = os.path.join(out, "icon.ico")
-    sizes = [16, 32, 48, 256]
-    frames = [raw.resize((s, s), Image.LANCZOS) for s in sizes]
-    frames[0].save(ico, format="ICO",
-                   sizes=[(s, s) for s in sizes],
-                   append_images=frames[1:])
+    # Save 256px as base; Pillow derives all smaller layers from it
+    icon256 = raw.resize((256, 256), Image.LANCZOS)
+    icon256.save(ico, format="ICO",
+                 sizes=[(16, 16), (32, 32), (48, 48), (256, 256)])
     print("  Saved:", ico)
     print("Done.")
 
